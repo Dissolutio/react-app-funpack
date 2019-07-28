@@ -1,5 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 const FirebaseContext = React.createContext(null)
 
-export { FirebaseContext }
+const useFirebaseContext = () => {
+	const firebaseApp = useContext(FirebaseContext)
+	return firebaseApp
+}
+
+export { FirebaseContext, useFirebaseContext }

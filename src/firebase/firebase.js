@@ -16,5 +16,14 @@ class Firebase {
 		this.db = app.database()
 		this.EmailAuthProvider = app.auth.EmailAuthProvider
 	}
+	dbUserById = uid => this.db.ref(`users/${uid}`)
+	saveNewUser = ({ uid, username, email, userRole }) => {
+		console.log(uid, username, email, userRole)
+		this.dbUserById(uid).set({
+			username,
+			email,
+			userRole: 'default',
+		})
+	}
 }
 export { Firebase }
