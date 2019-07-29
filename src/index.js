@@ -1,12 +1,25 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Firebase, useFirebaseContext, FirebaseContext, AuthUserContext, useAuthListener } from './firebase'
+import App from './App'
+import * as serviceWorker from './serviceWorker'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const firebaseApp = new Firebase()
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+ReactDOM.render(
+	<FirebaseContext.Provider value={firebaseApp}>
+		<AppAuthWrapper />
+	</FirebaseContext.Provider>,
+	document.getElementById('root'),
+)
+function AppAuthWrapper() {
+	const firebaseApp = useFirebaseContext()
+	const authState = useAuthListener(firebaseApp)
+	return (
+		<AuthUserContext.Provider value={authState}>
+			<App />
+		</AuthUserContext.Provider>
+	)
+}
+
+serviceWorker.unregister()
