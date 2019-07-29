@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useSessionContext, useFirebaseContext } from '../firebase'
+import { useAuthUserContext, useFirebaseContext } from '../firebase'
 import * as ROUTES from '../routes'
 
 const CurrentUserHUD = () => {
 	const firebaseApp = useFirebaseContext()
-	const { user } = useSessionContext()
+	const { user } = useAuthUserContext()
 	return (
 		<div>
 			{user ? (
@@ -30,7 +30,7 @@ export default function Header() {
 }
 
 const Navigation = () => {
-	const { user } = useSessionContext()
+	const { user } = useAuthUserContext()
 	const notSignedInCondition = !user
 	const signedInCondition = !!user
 	const adminCondition = user && user.userRole === `admin`

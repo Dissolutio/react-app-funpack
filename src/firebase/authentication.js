@@ -5,11 +5,11 @@ const AuthUserContext = React.createContext({
 	initializing: true,
 	user: null,
 })
-const useSessionContext = () => {
+const useAuthUserContext = () => {
 	const authState = useContext(AuthUserContext)
 	return authState
 }
-const useAuth = firebaseApp => {
+const useAuthListener = firebaseApp => {
 	const [authState, setAuthState] = useState(() => {
 		const user = firebaseApp.auth.currentUser
 		return { initializing: !user, user }
@@ -41,4 +41,4 @@ const useAuth = firebaseApp => {
 	}, [])
 	return authState
 }
-export { AuthUserContext, useSessionContext, useAuth }
+export { AuthUserContext, useAuthUserContext, useAuthListener }

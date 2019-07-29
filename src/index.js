@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Firebase, useFirebaseContext, FirebaseContext, AuthUserContext, useAuth } from './firebase'
+import { Firebase, useFirebaseContext, FirebaseContext, AuthUserContext, useAuthListener } from './firebase'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
@@ -14,7 +14,7 @@ ReactDOM.render(
 )
 function AppAuthWrapper() {
 	const firebaseApp = useFirebaseContext()
-	const authState = useAuth(firebaseApp)
+	const authState = useAuthListener(firebaseApp)
 	return (
 		<AuthUserContext.Provider value={authState}>
 			<App />
