@@ -56,9 +56,6 @@ const NonAuthLinks = () => (
 		<li>
 			<Link to={ROUTES.SIGNIN}>Sign In</Link>
 		</li>
-		<li>
-			<Link to={ROUTES.PW_FORGET}>Forgot your password?</Link>
-		</li>
 	</>
 )
 const AuthLinks = () => (
