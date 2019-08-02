@@ -29,12 +29,13 @@ class Firebase {
 	// *** Users API ***
 	dbAllUsers = () => this.db.ref(`users`)
 	dbUserById = uid => this.db.ref(`users/${uid}`)
-	saveNewUser = ({ uid, username, email, userRole }) => {
-		console.log(uid, username, email, userRole)
+	saveNewUser = user => {
+		const { uid, username, email, userRole, emailVerified } = user
 		this.dbUserById(uid).set({
 			username,
 			email,
-			userRole: 'default',
+			userRole,
+			emailVerified,
 		})
 	}
 }

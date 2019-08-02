@@ -3,34 +3,27 @@ import { Link } from 'react-router-dom'
 import { useFirebaseContext } from '../../firebase'
 import PasswordForgetForm from './PasswordForgetForm'
 import * as ROUTES from '../../routes'
+import { useInputValue } from '../../hooks/useInputValue'
 
 const SignInForm = props => {
+	const email = useInputValue('')
+	const password = useInputValue('')
 	const firebaseApp = useFirebaseContext()
-	const [formData, setFormData] = useState({ email: '', password: '', error: null })
-	const { email, password, error } = formData
+	const [error, setError] = React.useState({ code: '', message: '' })
 
 	const onFormSubmit = async event => {
 		event.preventDefault()
 		firebaseApp
-			.doSignInWithEmailAndPassword(email, password)
+			.doSignInWithEmailAndPassword(email.value, password.value)
 			.then(result => {
 				console.log('User Signed In', result)
 			})
 			.catch(error => {
 				console.log('Error signing in', error)
-				setFormData({
-					...formData,
-					error,
-				})
+				setError({ ...error })
 			})
 	}
-	const onTextInputChange = event => {
-		setFormData({
-			...formData,
-			[event.target.name]: event.target.value,
-		})
-	}
-	const isInvalid = password === '' || email === ''
+	const isInvalid = password.value === '' || email.value === ''
 	return (
 		<>
 			<p>
@@ -42,25 +35,13 @@ const SignInForm = props => {
 					<div>
 						<label htmlFor="email">
 							Email:
-							<input
-								name="email"
-								value={email}
-								onChange={onTextInputChange}
-								type="email"
-								placeholder="Email Address"
-							/>
+							<input type="text" placeholder="Email" {...email} />
 						</label>
 					</div>
 					<div>
 						<label htmlFor="password">
 							Password:
-							<input
-								name="password"
-								value={password}
-								onChange={onTextInputChange}
-								type="password"
-								placeholder="Password"
-							/>
+							<input type="password" placeholder="Password" {...password} />
 						</label>
 					</div>
 					<button type="submit" disabled={isInvalid}>
