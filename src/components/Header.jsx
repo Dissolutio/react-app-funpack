@@ -1,10 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
+import SideNav from './nav/SideNav'
+
 export default function Header() {
+	const [menuOpen, setMenuOpen] = useState(false)
+	const toggleMenuOpen = () => setMenuOpen(!menuOpen)
 	return (
-		<StyledHeader>
-			<MenuButton onClick={() => console.log('Open nav')}>&#9776; open</MenuButton>
-		</StyledHeader>
+		<>
+			<SideNav menuOpen={menuOpen} toggleMenuOpen={toggleMenuOpen} />
+			<StyledHeader>
+				<MenuButton onClick={toggleMenuOpen}>&#9776; Menu</MenuButton>
+			</StyledHeader>
+		</>
 	)
 }
 
@@ -13,6 +20,6 @@ const StyledHeader = styled.header`
 	background-color: #888888;
 `
 const MenuButton = styled.span`
-	font-size: 30px;
+	font-size: 2rem;
 	cursor: pointer;
 `

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useAuthUserContext } from '../firebase'
-import * as ROUTES from '../routes'
+import { useAuthUserContext } from '../../firebase'
+import * as ROUTES from '../../routes'
 
 const NavLinks = () => {
 	const { user } = useAuthUserContext()

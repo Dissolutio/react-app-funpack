@@ -9,7 +9,7 @@ const CurrentUserReadout = () => {
 		<div>
 			{user ? (
 				<>
-					<small>You are signed in as {user.email}</small>
+					<small>You are signed in as: {user.username}</small>
 					<button onClick={firebaseApp.doSignOut}>Sign Out</button>
 				</>
 			) : (

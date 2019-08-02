@@ -26,8 +26,8 @@ function App() {
 	const emailVerifiedCondition = () => !!user && user.emailVerified === true
 	const adminCondition = () => !!user && user.userRole === `admin`
 	return (
-		<div>
-			<Router>
+		<Router>
+			<div id="app-wrapper">
 				<Header />
 				<div id="page-wrapper">
 					<Switch>
@@ -70,8 +70,8 @@ function App() {
 						<Route component={Page404NotFound} />
 					</Switch>
 				</div>
-			</Router>
-		</div>
+			</div>
+		</Router>
 	)
 }
 export default App
