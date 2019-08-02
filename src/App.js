@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { useAuthUserContext, withAuthorization } from './firebase'
 
+import SideNav from './components/nav/SideNav'
 import Header from './components/Header'
 import LandingPage from './components/pages/LandingPage'
 import UserHomePage from './components/pages/UserHomePage'
@@ -16,19 +17,22 @@ import VerifyEmail from './components/authentication/VerifyEmail'
 import * as ROUTES from './routes'
 
 function App() {
+	const [menuOpen, setMenuOpen] = React.useState(false)
 	const { initializing, user } = useAuthUserContext()
 	if (initializing) {
 		return <h1>Initializing Authentication</h1>
 	}
+	const toggleMenuOpen = () => setMenuOpen(!menuOpen)
 	const notSignedInCondition = () => !user
 	const signedInCondition = () => !!user
 	const emailNotVerifiedCondition = () => !!user && user.emailVerified === false
 	const emailVerifiedCondition = () => !!user && user.emailVerified === true
 	const adminCondition = () => !!user && user.userRole === `admin`
 	return (
-		<div>
-			<Router>
-				<Header />
+		<Router>
+			<div id="app-wrapper">
+				<SideNav menuOpen={menuOpen} toggleMenuOpen={toggleMenuOpen} />
+				<Header toggleMenuOpen={toggleMenuOpen} />
 				<div id="page-wrapper">
 					<Switch>
 						<Route exact path={ROUTES.LANDING} component={LandingPage} />
@@ -70,8 +74,8 @@ function App() {
 						<Route component={Page404NotFound} />
 					</Switch>
 				</div>
-			</Router>
-		</div>
+			</div>
+		</Router>
 	)
 }
 export default App

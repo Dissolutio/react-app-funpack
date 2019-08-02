@@ -1,10 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-export default function Header() {
+
+export default function Header(props) {
+	const { toggleMenuOpen } = props
 	return (
-		<StyledHeader>
-			<MenuButton onClick={() => console.log('Open nav')}>&#9776; open</MenuButton>
-		</StyledHeader>
+		<>
+			<StyledHeader>
+				<MenuButton onClick={toggleMenuOpen}>&#9776; Menu</MenuButton>
+			</StyledHeader>
+		</>
 	)
 }
 
@@ -13,6 +17,6 @@ const StyledHeader = styled.header`
 	background-color: #888888;
 `
 const MenuButton = styled.span`
-	font-size: 30px;
+	font-size: 2rem;
 	cursor: pointer;
 `
