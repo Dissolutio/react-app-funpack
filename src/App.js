@@ -1,81 +1,42 @@
 import React from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { useAuthUserContext, withAuthorization } from './firebase'
+import styled from 'styled-components'
 
-import SideNav from './components/nav/SideNav'
-import Header from './components/Header'
-import LandingPage from './components/pages/LandingPage'
-import UserHomePage from './components/pages/UserHomePage'
-import AccountPage from './components/pages/AccountPage'
-import AdminPage from './components/pages/AdminPage'
-import AdminUserListPage from './components/pages/AdminUserListPage'
-import Page404NotFound from './components/pages/Page404NotFound'
-import SignUpForm from './components/authentication/SignUpForm'
-import SignInForm from './components/authentication/SignInForm'
-import VerifyEmail from './components/authentication/VerifyEmail'
-
-import * as ROUTES from './routes'
-
+import { useAuthUserContext } from './firebase'
+import SideNav from './components/navigation/SideNav'
+import Header from './components/layout/Header'
+import PageRouter from './PageRouter'
+import { PageStyleContainer } from './components/shared/StyleContainer'
 function App() {
-	const [menuOpen, setMenuOpen] = React.useState(false)
-	const { initializing, user } = useAuthUserContext()
-	if (initializing) {
-		return <h1>Initializing Authentication</h1>
-	}
-	const toggleMenuOpen = () => setMenuOpen(!menuOpen)
-	const notSignedInCondition = () => !user
-	const signedInCondition = () => !!user
-	const emailNotVerifiedCondition = () => !!user && user.emailVerified === false
-	const emailVerifiedCondition = () => !!user && user.emailVerified === true
-	const adminCondition = () => !!user && user.userRole === `admin`
-	return (
-		<Router>
-			<div id="app-wrapper">
-				<SideNav menuOpen={menuOpen} toggleMenuOpen={toggleMenuOpen} />
-				<Header toggleMenuOpen={toggleMenuOpen} />
-				<div id="page-wrapper">
-					<Switch>
-						<Route exact path={ROUTES.LANDING} component={LandingPage} />
-						<Route
-							exact
-							path={ROUTES.SIGNUP}
-							component={withAuthorization(notSignedInCondition, ROUTES.USER_HOME)(SignUpForm)}
-						/>
-						<Route
-							exact
-							path={ROUTES.SIGNIN}
-							component={withAuthorization(notSignedInCondition, ROUTES.USER_HOME)(SignInForm)}
-						/>
-						<Route
-							exact
-							path={ROUTES.VERIFY_EMAIL}
-							component={withAuthorization(emailNotVerifiedCondition, ROUTES.SIGNIN)(VerifyEmail)}
-						/>
-						<Route
-							exact
-							path={ROUTES.USER_HOME}
-							component={withAuthorization(signedInCondition, ROUTES.SIGNIN)(UserHomePage)}
-						/>
-						<Route
-							exact
-							path={ROUTES.USER_ACCOUNT}
-							component={withAuthorization(emailVerifiedCondition, ROUTES.VERIFY_EMAIL)(AccountPage)}
-						/>
-						<Route
-							exact
-							path={ROUTES.ADMIN}
-							component={withAuthorization(adminCondition, ROUTES.USER_HOME)(AdminPage)}
-						/>
-						<Route
-							exact
-							path={ROUTES.ADMIN_USER_LIST}
-							component={withAuthorization(adminCondition, ROUTES.USER_HOME)(AdminUserListPage)}
-						/>
-						<Route component={Page404NotFound} />
-					</Switch>
-				</div>
-			</div>
-		</Router>
-	)
+    const { initializing } = useAuthUserContext()
+    if (initializing) {
+        return <h1>Initializing Authentication</h1>
+    }
+
+    return (
+        <AppStyleContainer>
+            <SideNav />
+            <Header />
+            <PageStyleContainer>
+                <PageRouter />
+            </PageStyleContainer>
+        </AppStyleContainer>
+    )
 }
 export default App
+
+const AppStyleContainer = styled.div`
+    box-sizing: border-box;
+    --text1: 16px;
+    --text2: 20px;
+    --text3: 24px;
+    --text4: 30px;
+    --text5: 2rem;
+    --gray1: #ccdad1; /*light gray */
+    --gray2: #9caea9; /* dark medium gray */
+    --gray3: #788585; /* old silver */
+    --gray4: #7c7a7a; /* trolley gray */
+    --gray5: #494949; /* outer space */
+    --black: #121111; /* licorice */
+    --font-light: #ffffff; /* anti-flash white */
+    --font-dark: #1a1818; /* eerie black */
+`
