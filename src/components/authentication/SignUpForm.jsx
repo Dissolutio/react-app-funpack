@@ -1,42 +1,39 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { useFirebaseContext } from '../../firebase'
-
-const INITIAL_STATE = {
-	username: '',
-	email: '',
-	password: '',
-	passwordVerify: '',
-	error: null,
-}
+import { useInputValue } from '../../hooks/useInputValue'
 
 const SignUpForm = props => {
 	const firebaseApp = useFirebaseContext()
-	const [formData, setFormData] = useState({ ...INITIAL_STATE })
-	const { username, email, password, passwordVerify, error } = formData
+	const username = useInputValue('dissolutio')
+	const email = useInputValue('entity.john@gmail.com')
+	const password = useInputValue('password')
+	const passwordVerify = useInputValue('password')
+	const [error, setError] = useState({ code: 'fake code', message: 'nothing to say' })
 
 	const onFormSubmit = event => {
 		event.preventDefault()
 		firebaseApp
-			.doCreateUserWithEmailAndPassword(email, password)
+			.doCreateUserWithEmailAndPassword(email.value, password.value)
 			.then(result => {
 				console.log('Created User', result)
+				firebaseApp.saveNewUser({
+					email: email.value,
+					username: username.value,
+					userRole: 'default',
+					uid: result.user.uid,
+					emailVerified: result.user.emailVerified,
+				})
 			})
 			.catch(error => {
 				console.log('Error creating user', error)
-				setFormData({
-					...formData,
-					error,
+				setError({
+					...error,
 				})
 			})
 	}
-	const onTextInputChange = event => {
-		setFormData({
-			...formData,
-			[event.target.name]: event.target.value,
-		})
-	}
-	const isInvalid = password !== passwordVerify || password === '' || email === '' || username === ''
+	const isInvalid =
+		password.value !== passwordVerify.value || password.value === '' || email.value === '' || username.value === ''
 	return (
 		<div>
 			<form onSubmit={onFormSubmit}>
@@ -45,50 +42,26 @@ const SignUpForm = props => {
 					<div>
 						<label htmlFor="username">
 							Username:
-							<input
-								name="username"
-								value={username}
-								onChange={onTextInputChange}
-								type="text"
-								placeholder="Username"
-							/>
+							<input type="text" placeholder="Username" {...username} />
 						</label>
 					</div>
 					<div>
 						<label htmlFor="email">
 							Email address:
-							<input
-								name="email"
-								value={email}
-								onChange={onTextInputChange}
-								type="email"
-								placeholder="Email Address"
-							/>
+							<input type="text" placeholder="Email" {...email} />
 						</label>
 					</div>
 
 					<div>
 						<label htmlFor="password">
 							Password:
-							<input
-								name="password"
-								value={password}
-								onChange={onTextInputChange}
-								type="password"
-								placeholder="Password"
-							/>
+							<input type="password" placeholder="Password" {...password} />
 						</label>
 					</div>
 					<div>
 						<label htmlFor="passwordVerify">
 							Confirm password:
-							<input
-								name="passwordVerify"
-								value={passwordVerify}
-								onChange={onTextInputChange}
-								type="password"
-								placeholder="Confirm Password"
-							/>
+							<input type="password" placeholder="Verify Password" {...passwordVerify} />
 						</label>
 					</div>
 					<button type="submit" disabled={isInvalid}>
