@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Firebase, useFirebaseContext, FirebaseContext, AuthUserContext, useAuthListener } from './firebase'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Firebase, FirebaseContext, useFirebaseContext, AuthUserContext, useAuthListener } from './firebase'
+import { UIContextProvider } from './hooks/useUIContext'
 import App from './App'
 import 'normalize.css'
 import * as serviceWorker from './serviceWorker'
@@ -8,19 +10,24 @@ import * as serviceWorker from './serviceWorker'
 const firebaseApp = new Firebase()
 
 ReactDOM.render(
-	<FirebaseContext.Provider value={firebaseApp}>
-		<AppAuthWrapper />
-	</FirebaseContext.Provider>,
-	document.getElementById('root'),
+    <FirebaseContext.Provider value={firebaseApp}>
+        <AppWrapper />
+    </FirebaseContext.Provider>,
+    document.getElementById('root'),
 )
-function AppAuthWrapper() {
-	const firebaseApp = useFirebaseContext()
-	const authState = useAuthListener(firebaseApp)
-	return (
-		<AuthUserContext.Provider value={authState}>
-			<App />
-		</AuthUserContext.Provider>
-	)
+
+function AppWrapper() {
+    const firebaseApp = useFirebaseContext()
+    const authState = useAuthListener(firebaseApp)
+    return (
+        <AuthUserContext.Provider value={authState}>
+            <UIContextProvider>
+                <Router>
+                    <App />
+                </Router>
+            </UIContextProvider>
+        </AuthUserContext.Provider>
+    )
 }
 
 serviceWorker.unregister()
